@@ -1,6 +1,9 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class GameWindow extends JFrame {
+
+    private JPanel mainPanel;
 
     public GameWindow() {
         setSize(800, 600);
@@ -8,5 +11,15 @@ public class GameWindow extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setState(JFrame.NORMAL);
+
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLUE);
+        mainPanel.setFocusable(true);
+        mainPanel.setDoubleBuffered(true);
+        add(mainPanel);
+    }
+
+    public void start() {
+        setVisible(true);
     }
 }
