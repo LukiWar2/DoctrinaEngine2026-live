@@ -6,6 +6,7 @@ public class GameWindow extends JFrame {
 
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 600;
+    private final int SCORE_INCREMENT = 10;
     private final int SLEEP = 25;
 
     private int positionX = 200;
@@ -20,6 +21,7 @@ public class GameWindow extends JFrame {
     private boolean playing = true;
     private BufferedImage bufferedImage;
     private Graphics2D bufferEngine;
+    private int score = 0;
 
     public GameWindow() {
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -81,10 +83,12 @@ public class GameWindow extends JFrame {
 
         if (positionX >= maxBallWidth || positionX <= 0) {
             velocityX = -velocityX;
+            score += SCORE_INCREMENT;
         }
 
         if (positionY >= maxBallHeight || positionY <= 0) {
             velocityY = -velocityY;
+            score += SCORE_INCREMENT;
         }
     }
 
@@ -96,6 +100,9 @@ public class GameWindow extends JFrame {
 
         graphics.setPaint(Color.RED);
         graphics.fillOval(positionX, positionY, DIAMETER, DIAMETER);
+
+        graphics.setPaint(Color.WHITE);
+        graphics.drawString("Score: " + score, 10, 20);
 
         graphics.dispose();
     }
