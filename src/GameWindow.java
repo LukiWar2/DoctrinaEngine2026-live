@@ -19,6 +19,7 @@ public class GameWindow extends JFrame {
     private JPanel mainPanel;
     private boolean playing = true;
     private BufferedImage bufferedImage;
+    private Graphics2D bufferEngine;
 
     public GameWindow() {
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -46,6 +47,19 @@ public class GameWindow extends JFrame {
                 BufferedImage.TYPE_INT_RGB
         );
 
+        RenderingHints hints = new RenderingHints(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
+
+        hints.put(
+                RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY
+        );
+
+        bufferEngine = bufferedImage.createGraphics();
+        bufferEngine.setRenderingHints(hints);
+
         while (playing) {
             update();
             drawOnBuffer();
@@ -57,6 +71,8 @@ public class GameWindow extends JFrame {
                 throw new RuntimeException(e);
             }
         }
+
+        bufferEngine.dispose();
     }
 
     public void update() {
