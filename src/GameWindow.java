@@ -9,9 +9,12 @@ public class GameWindow extends JFrame {
 
     private int positionX = 200;
     private int positionY = 150;
+    private int velocityX = 5;
+    private int velocityY = 3;
     private final int DIAMETER = 50;
 
     private JPanel mainPanel;
+    private boolean playing = true;
 
     public GameWindow() {
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -30,13 +33,29 @@ public class GameWindow extends JFrame {
     public void start() {
         setVisible(true);
 
-        try {
-            Thread.sleep(SLEEP);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        while (playing) {
+            update();
+            draw();
 
+            try {
+                Thread.sleep(SLEEP);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void update() {
+        positionX += velocityX;
+        positionY += velocityY;
+    }
+
+    public void draw() {
         Graphics2D graphics = (Graphics2D) mainPanel.getGraphics();
+
+        graphics.setPaint(Color.BLUE);
+        graphics.fillRect(0,0, mainPanel.getWidth(), mainPanel.getHeight());
+
         graphics.setPaint(Color.RED);
         graphics.fillOval(positionX, positionY, DIAMETER, DIAMETER);
 
