@@ -6,8 +6,8 @@ public class Ball {
     private int velocityX = 5;
     private int velocityY = 3;
     private final int DIAMETER = 50;
-    private int maxBallWidth;
-    private int maxBallHeight;
+    private final int maxBallWidth;
+    private final int maxBallHeight;
 
     public Ball(int windowWidth, int windowHeight) {
         maxBallWidth = windowWidth - DIAMETER;

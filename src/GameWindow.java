@@ -33,6 +33,24 @@ public class GameWindow extends JFrame {
     public void start() {
         setVisible(true);
 
+        setupBuffering();
+        makeBall();
+
+        while (playing) {
+            update();
+            drawOnBuffer();
+            drawOnScreen();
+            sleep();
+        }
+
+        disposeElements();
+    }
+
+    private void makeBall() {
+        ball = new Ball(mainPanel.getWidth(), mainPanel.getHeight());
+    }
+
+    private void setupBuffering() {
         bufferedImage = new BufferedImage(
                 mainPanel.getWidth(),
                 mainPanel.getHeight(),
@@ -51,43 +69,46 @@ public class GameWindow extends JFrame {
 
         bufferEngine = bufferedImage.createGraphics();
         bufferEngine.setRenderingHints(hints);
+    }
 
-        ball = new Ball(mainPanel.getWidth(), mainPanel.getHeight());
-
-        while (playing) {
-            update();
-            drawOnBuffer();
-            drawOnScreen();
-
-            try {
-                Thread.sleep(SLEEP);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
+    private void disposeElements() {
         bufferEngine.dispose();
     }
 
-    public void update() {
+    private void sleep() {
+        try {
+            Thread.sleep(SLEEP);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void update() {
         score += ball.update() * SCORE_INCREMENT;
     }
 
-    public void drawOnBuffer() {
+    private void drawOnBuffer() {
         Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
 
-        graphics.setPaint(Color.BLUE);
-        graphics.fillRect(0,0, mainPanel.getWidth(), mainPanel.getHeight());
+        drawBackground(graphics);
+        drawScore(graphics);
 
         ball.draw(graphics);
-
-        graphics.setPaint(Color.WHITE);
-        graphics.drawString("Score: " + score, 10, 20);
 
         graphics.dispose();
     }
 
-    public void drawOnScreen() {
+    private void drawBackground(Graphics2D graphics) {
+        graphics.setPaint(Color.BLUE);
+        graphics.fillRect(0,0, mainPanel.getWidth(), mainPanel.getHeight());
+    }
+
+    private void drawScore(Graphics2D graphics) {
+        graphics.setPaint(Color.WHITE);
+        graphics.drawString("Score: " + score, 10, 20);
+    }
+
+    private void drawOnScreen() {
         Graphics2D graphics = (Graphics2D) mainPanel.getGraphics();
 
         graphics.drawImage(bufferedImage, 0, 0, mainPanel);
