@@ -1,11 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class GameWindow extends JFrame {
 
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 600;
-    private final int SLEEP = 100;
+    private final int SLEEP = 25;
 
     private int positionX = 200;
     private int positionY = 150;
@@ -17,6 +18,7 @@ public class GameWindow extends JFrame {
 
     private JPanel mainPanel;
     private boolean playing = true;
+    private BufferedImage bufferedImage;
 
     public GameWindow() {
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -38,9 +40,16 @@ public class GameWindow extends JFrame {
         maxBallWidth = mainPanel.getWidth() - DIAMETER;
         maxBallHeight = mainPanel.getHeight() - DIAMETER;
 
+        bufferedImage = new BufferedImage(
+                mainPanel.getWidth(),
+                mainPanel.getHeight(),
+                BufferedImage.TYPE_INT_RGB
+        );
+
         while (playing) {
             update();
-            draw();
+            drawOnBuffer();
+            drawOnScreen();
 
             try {
                 Thread.sleep(SLEEP);
@@ -63,8 +72,8 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public void draw() {
-        Graphics2D graphics = (Graphics2D) mainPanel.getGraphics();
+    public void drawOnBuffer() {
+        Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
 
         graphics.setPaint(Color.BLUE);
         graphics.fillRect(0,0, mainPanel.getWidth(), mainPanel.getHeight());
@@ -72,6 +81,13 @@ public class GameWindow extends JFrame {
         graphics.setPaint(Color.RED);
         graphics.fillOval(positionX, positionY, DIAMETER, DIAMETER);
 
+        graphics.dispose();
+    }
+
+    public void drawOnScreen() {
+        Graphics2D graphics = (Graphics2D) mainPanel.getGraphics();
+
+        graphics.drawImage(bufferedImage, 0, 0, mainPanel);
         graphics.dispose();
     }
 }
