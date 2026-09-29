@@ -3,10 +3,18 @@ import java.awt.*;
 
 public class GameWindow extends JFrame {
 
+    private final int WINDOW_WIDTH = 800;
+    private final int WINDOW_HEIGHT = 600;
+    private final int SLEEP = 100;
+
+    private int positionX = 200;
+    private int positionY = 150;
+    private final int DIAMETER = 50;
+
     private JPanel mainPanel;
 
     public GameWindow() {
-        setSize(800, 600);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,14 +31,14 @@ public class GameWindow extends JFrame {
         setVisible(true);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(SLEEP);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
         Graphics2D graphics = (Graphics2D) mainPanel.getGraphics();
         graphics.setPaint(Color.RED);
-        graphics.fillOval(200, 150, 50, 50);
+        graphics.fillOval(positionX, positionY, DIAMETER, DIAMETER);
 
         graphics.dispose();
     }
