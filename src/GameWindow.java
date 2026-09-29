@@ -9,19 +9,12 @@ public class GameWindow extends JFrame {
     private final int SCORE_INCREMENT = 10;
     private final int SLEEP = 25;
 
-    private int positionX = 200;
-    private int positionY = 150;
-    private int velocityX = 5;
-    private int velocityY = 3;
-    private final int DIAMETER = 50;
-    private int maxBallWidth;
-    private int maxBallHeight;
-
     private JPanel mainPanel;
     private boolean playing = true;
     private BufferedImage bufferedImage;
     private Graphics2D bufferEngine;
     private int score = 0;
+    private Ball ball;
 
     public GameWindow() {
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -39,9 +32,6 @@ public class GameWindow extends JFrame {
 
     public void start() {
         setVisible(true);
-
-        maxBallWidth = mainPanel.getWidth() - DIAMETER;
-        maxBallHeight = mainPanel.getHeight() - DIAMETER;
 
         bufferedImage = new BufferedImage(
                 mainPanel.getWidth(),
@@ -62,6 +52,8 @@ public class GameWindow extends JFrame {
         bufferEngine = bufferedImage.createGraphics();
         bufferEngine.setRenderingHints(hints);
 
+        ball = new Ball(mainPanel.getWidth(), mainPanel.getHeight());
+
         while (playing) {
             update();
             drawOnBuffer();
@@ -78,18 +70,7 @@ public class GameWindow extends JFrame {
     }
 
     public void update() {
-        positionX += velocityX;
-        positionY += velocityY;
-
-        if (positionX >= maxBallWidth || positionX <= 0) {
-            velocityX = -velocityX;
-            score += SCORE_INCREMENT;
-        }
-
-        if (positionY >= maxBallHeight || positionY <= 0) {
-            velocityY = -velocityY;
-            score += SCORE_INCREMENT;
-        }
+        score += ball.update() * SCORE_INCREMENT;
     }
 
     public void drawOnBuffer() {
@@ -98,8 +79,7 @@ public class GameWindow extends JFrame {
         graphics.setPaint(Color.BLUE);
         graphics.fillRect(0,0, mainPanel.getWidth(), mainPanel.getHeight());
 
-        graphics.setPaint(Color.RED);
-        graphics.fillOval(positionX, positionY, DIAMETER, DIAMETER);
+        ball.draw(graphics);
 
         graphics.setPaint(Color.WHITE);
         graphics.drawString("Score: " + score, 10, 20);
