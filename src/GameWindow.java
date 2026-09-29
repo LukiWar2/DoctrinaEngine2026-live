@@ -12,6 +12,8 @@ public class GameWindow extends JFrame {
     private int velocityX = 5;
     private int velocityY = 3;
     private final int DIAMETER = 50;
+    private int maxBallWidth;
+    private int maxBallHeight;
 
     private JPanel mainPanel;
     private boolean playing = true;
@@ -33,6 +35,9 @@ public class GameWindow extends JFrame {
     public void start() {
         setVisible(true);
 
+        maxBallWidth = mainPanel.getWidth() - DIAMETER;
+        maxBallHeight = mainPanel.getHeight() - DIAMETER;
+
         while (playing) {
             update();
             draw();
@@ -48,6 +53,14 @@ public class GameWindow extends JFrame {
     public void update() {
         positionX += velocityX;
         positionY += velocityY;
+
+        if (positionX >= maxBallWidth || positionX <= 0) {
+            velocityX = -velocityX;
+        }
+
+        if (positionY >= maxBallHeight || positionY <= 0) {
+            velocityY = -velocityY;
+        }
     }
 
     public void draw() {
