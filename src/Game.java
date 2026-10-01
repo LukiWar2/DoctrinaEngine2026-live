@@ -14,15 +14,18 @@ public abstract class Game {
         engine = new RenderingEngine();
     }
 
+    public abstract void initialize();
     public abstract void update();
     public abstract void drawOnBuffer(Graphics2D buffer);
-    public abstract void initialize();
 
-    public void start() {
+    public final void start() {
         engine.start();
-
         initialize();
 
+        run();
+    }
+
+    private void run() {
         while (playing) {
             update();
             drawOnBuffer(engine.getBuffer());

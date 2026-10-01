@@ -1,9 +1,15 @@
 import java.awt.*;
 
-public class BouncingBallGame extends Game {
+public final class BouncingBallGame extends Game {
     private final int SCORE_INCREMENT = 10;
     private int score;
     private Ball ball;
+
+    @Override
+    public void initialize() {
+        ball = new Ball(getWidth(), getHeight());
+        score = 0;
+    }
 
     @Override
     public void update() {
@@ -16,12 +22,6 @@ public class BouncingBallGame extends Game {
         drawScore(buffer);
 
         ball.draw(buffer);
-    }
-
-    @Override
-    public void initialize() {
-        ball = new Ball(getWidth(), getHeight());
-        score = 0;
     }
 
     private void drawBackground(Graphics2D graphics) {
