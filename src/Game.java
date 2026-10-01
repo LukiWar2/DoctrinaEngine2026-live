@@ -17,6 +17,8 @@ public class Game {
     private int score = 0;
     private Ball ball;
 
+    private long lastUpdate = System.currentTimeMillis();
+
     public Game() {
         initializeFrame();
         initializePanel();
@@ -85,11 +87,14 @@ public class Game {
     }
 
     private void sleep() {
+        long sleepTime = SLEEP - (System.currentTimeMillis() - lastUpdate);
+        sleepTime = Math.max(sleepTime, 4);
         try {
-            Thread.sleep(SLEEP);
+            Thread.sleep(sleepTime);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        lastUpdate = System.currentTimeMillis();
     }
 
     private void update() {
