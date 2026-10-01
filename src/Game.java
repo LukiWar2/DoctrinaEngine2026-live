@@ -2,88 +2,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Game {
+public abstract class Game {
 
-    private final int WINDOW_WIDTH = 800;
-    private final int WINDOW_HEIGHT = 600;
-    private final int SCORE_INCREMENT = 10;
     private final int SLEEP = 25;
-
-    private JFrame mainFrame;
-    private JPanel mainPanel;
     private boolean playing = true;
-    private BufferedImage bufferedImage;
-    private Graphics2D bufferEngine;
-    private int score = 0;
-    private Ball ball;
 
     private long lastUpdate = System.currentTimeMillis();
+    private RenderingEngine engine;
 
     public Game() {
-        initializeFrame();
-        initializePanel();
+        engine = new RenderingEngine();
     }
 
-    private void initializePanel() {
-        mainPanel = new JPanel();
-        mainPanel.setBackground(Color.BLUE);
-        mainPanel.setFocusable(true);
-        mainPanel.setDoubleBuffered(true);
-        mainFrame.add(mainPanel);
-    }
-
-    private void initializeFrame() {
-        mainFrame = new JFrame();
-        mainFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setResizable(false);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setState(JFrame.NORMAL);
-    }
+    public abstract void update();
+    public abstract void drawOnBuffer(Graphics2D buffer);
+    public abstract void initialize();
 
     public void start() {
-        mainFrame.setVisible(true);
+        engine.start();
 
-        setupBuffering();
-        makeBall();
+        initialize();
 
         while (playing) {
             update();
-            drawOnBuffer();
-            drawOnScreen();
+            drawOnBuffer(engine.getBuffer());
+            engine.drawOnScreen();
             sleep();
         }
-
-        disposeElements();
-    }
-
-    private void makeBall() {
-        ball = new Ball(mainPanel.getWidth(), mainPanel.getHeight());
-    }
-
-    private void setupBuffering() {
-        bufferedImage = new BufferedImage(
-                mainPanel.getWidth(),
-                mainPanel.getHeight(),
-                BufferedImage.TYPE_INT_RGB
-        );
-
-        RenderingHints hints = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
-
-        hints.put(
-                RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY
-        );
-
-        bufferEngine = bufferedImage.createGraphics();
-        bufferEngine.setRenderingHints(hints);
-    }
-
-    private void disposeElements() {
-        bufferEngine.dispose();
     }
 
     private void sleep() {
@@ -97,35 +42,11 @@ public class Game {
         lastUpdate = System.currentTimeMillis();
     }
 
-    private void update() {
-        score += ball.update() * SCORE_INCREMENT;
+    public int getWidth() {
+        return engine.getWidth();
     }
 
-    private void drawOnBuffer() {
-        Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
-
-        drawBackground(graphics);
-        drawScore(graphics);
-
-        ball.draw(graphics);
-
-        graphics.dispose();
-    }
-
-    private void drawBackground(Graphics2D graphics) {
-        graphics.setPaint(Color.BLUE);
-        graphics.fillRect(0,0, mainPanel.getWidth(), mainPanel.getHeight());
-    }
-
-    private void drawScore(Graphics2D graphics) {
-        graphics.setPaint(Color.WHITE);
-        graphics.drawString("Score: " + score, 10, 20);
-    }
-
-    private void drawOnScreen() {
-        Graphics2D graphics = (Graphics2D) mainPanel.getGraphics();
-
-        graphics.drawImage(bufferedImage, 0, 0, mainPanel);
-        graphics.dispose();
+    public int getHeight() {
+        return engine.getHeight();
     }
 }
