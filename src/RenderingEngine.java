@@ -10,7 +10,6 @@ public class RenderingEngine {
     private JPanel mainPanel;
 
     private BufferedImage bufferedImage;
-    private Graphics2D bufferEngine;
 
     public RenderingEngine() {
         initializeFrame();
@@ -36,32 +35,23 @@ public class RenderingEngine {
 
     public void start() {
         mainFrame.setVisible(true);
-        setupBuffering();
     }
 
-    public Graphics2D getBuffer() {
+    public Graphics2D buildBuffer() {
+        bufferedImage = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D bufferEngine = bufferedImage.createGraphics();
+        bufferEngine.setRenderingHints(buildRenderingHints());
         return bufferEngine;
     }
 
-    private void setupBuffering() {
-        bufferedImage = new BufferedImage(
-                mainPanel.getWidth(),
-                mainPanel.getHeight(),
-                BufferedImage.TYPE_INT_RGB
-        );
-
+    private RenderingHints buildRenderingHints() {
         RenderingHints hints = new RenderingHints(
                 RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
-
-        hints.put(
-                RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY
-        );
-
-        bufferEngine = bufferedImage.createGraphics();
-        bufferEngine.setRenderingHints(hints);
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        hints.put(RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY);
+        return hints;
     }
 
     public int getWidth() {

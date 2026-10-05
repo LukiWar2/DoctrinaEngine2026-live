@@ -28,7 +28,7 @@ public abstract class Game {
     private void run() {
         while (playing) {
             update();
-            drawOnBuffer(engine.getBuffer());
+            drawOnBuffer(engine.buildBuffer());
             engine.drawOnScreen();
             sleep();
         }
